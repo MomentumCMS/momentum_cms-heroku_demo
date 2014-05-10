@@ -1,0 +1,6 @@
+{
+  "identifier": "example-a",
+  "label": "Example A",
+  "host":  "example-a.dev",
+  "locales": ["en", "fr"]
+}
