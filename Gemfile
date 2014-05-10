@@ -31,3 +31,4 @@ group :production do
 end
 
 gem 'momentum_cms', github: 'MomentumCMS/momentum_cms', branch: 'master'
+gem 'unicorn'
