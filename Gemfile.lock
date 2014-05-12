@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/MomentumCMS/momentum_cms.git
-  revision: 9bb8e74d4cdbdfae17010b69c45cb85adf8ea0cc
+  revision: 176b841eb39a64e4eea2d24c798e92bd0b461fee
   branch: master
   specs:
     momentum_cms (0.0.1)
@@ -8,10 +8,8 @@ GIT
       awesome_nested_set (~> 3.0.0.rc.3)
       globalize (~> 4.0.1)
       globalize-versioning (~> 0.1.0.alpha.1)
-      globalize-versioning (~> 0.1.0.alpha.1)
       haml-rails (~> 0.4)
       jquery-rails (~> 3.1.0)
-      liquid (~> 2.6.0)
       liquid (~> 2.6.1)
       paper_trail (~> 3.0.1)
       paperclip (~> 4.1.1)
@@ -95,7 +93,7 @@ GEM
     mime-types (1.25.1)
     minitest (4.7.5)
     multi_json (1.10.0)
-    paper_trail (3.0.1)
+    paper_trail (3.0.2)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     paperclip (4.1.1)
@@ -161,7 +159,7 @@ GEM
     uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unicorn (4.6.0)
+    unicorn (4.8.3)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
