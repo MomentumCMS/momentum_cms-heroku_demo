@@ -22,7 +22,12 @@ module MomentumCmsHerokuDemo
 
     config.i18n.enforce_available_locales = false
 
-    config.action_mailer.delivery_method = :postmark
-    config.action_mailer.postmark_settings = { :api_key => ENV['POSTMARK'] }
+    config.action_mailer.smtp_settings = {
+      :address => 'mailtrap.io',
+      :port => 2525,
+      :user_name => '203823429532d1eb4',
+      :password => 'd235bcef92256e'
+
+    }
   end
 end
