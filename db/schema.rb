@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140510204443) do
+ActiveRecord::Schema.define(version: 20140515061328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20140510204443) do
   add_index "momentum_cms_content_translations", ["momentum_cms_content_id"], name: "index_f568390e5943e526d13e1fe618dba0f7bd86e30f", using: :btree
 
   create_table "momentum_cms_contents", force: true do |t|
+    t.boolean  "default"
     t.integer  "page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -59,6 +60,7 @@ ActiveRecord::Schema.define(version: 20140510204443) do
   create_table "momentum_cms_files", force: true do |t|
     t.string   "label"
     t.string   "tag"
+    t.string   "slug"
     t.boolean  "multiple",          default: false
     t.integer  "site_id"
     t.integer  "attachable_id"
@@ -77,6 +79,28 @@ ActiveRecord::Schema.define(version: 20140510204443) do
     t.string "label"
     t.string "identifier"
   end
+
+  create_table "momentum_cms_menu_items", force: true do |t|
+    t.integer  "menu_id"
+    t.string   "ancestry"
+    t.integer  "menu_item_type"
+    t.integer  "linkable_id"
+    t.string   "linkable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "momentum_cms_menu_items", ["menu_id"], name: "index_momentum_cms_menu_items_on_menu_id", using: :btree
+
+  create_table "momentum_cms_menus", force: true do |t|
+    t.integer  "site_id"
+    t.string   "label"
+    t.string   "slug"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "momentum_cms_menus", ["site_id"], name: "index_momentum_cms_menus_on_site_id", using: :btree
 
   create_table "momentum_cms_page_translations", force: true do |t|
     t.integer  "momentum_cms_page_id", null: false
@@ -136,6 +160,7 @@ ActiveRecord::Schema.define(version: 20140510204443) do
   create_table "momentum_cms_snippets", force: true do |t|
     t.integer  "site_id"
     t.string   "label"
+    t.string   "slug"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -149,11 +174,41 @@ ActiveRecord::Schema.define(version: 20140510204443) do
     t.text     "js"
     t.text     "css"
     t.string   "ancestry"
+    t.boolean  "permanent_record", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "momentum_cms_templates", ["site_id"], name: "index_momentum_cms_templates_on_site_id", using: :btree
+
+  create_table "momentum_cms_users", force: true do |t|
+    t.string   "email",                                       null: false
+    t.string   "crypted_password",                            null: false
+    t.string   "salt",                                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "remember_me_token"
+    t.datetime "remember_me_token_expires_at"
+    t.string   "reset_password_token"
+    t.datetime "reset_password_token_expires_at"
+    t.datetime "reset_password_email_sent_at"
+    t.datetime "last_login_at"
+    t.datetime "last_logout_at"
+    t.datetime "last_activity_at"
+    t.string   "last_login_from_ip_address"
+    t.string   "activation_state"
+    t.string   "activation_token"
+    t.datetime "activation_token_expires_at"
+    t.integer  "failed_logins_count",             default: 0
+    t.datetime "lock_expires_at"
+    t.string   "unlock_token"
+  end
+
+  add_index "momentum_cms_users", ["activation_token"], name: "index_momentum_cms_users_on_activation_token", using: :btree
+  add_index "momentum_cms_users", ["email"], name: "index_momentum_cms_users_on_email", unique: true, using: :btree
+  add_index "momentum_cms_users", ["last_logout_at", "last_activity_at"], name: "momentum_cms_users_l_l_a_l_a_a", using: :btree
+  add_index "momentum_cms_users", ["remember_me_token"], name: "index_momentum_cms_users_on_remember_me_token", using: :btree
+  add_index "momentum_cms_users", ["reset_password_token"], name: "index_momentum_cms_users_on_reset_password_token", using: :btree
 
   create_table "versions", force: true do |t|
     t.string   "item_type",  null: false
