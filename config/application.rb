@@ -21,5 +21,8 @@ module MomentumCmsHerokuDemo
     # config.i18n.default_locale = :de
 
     config.i18n.enforce_available_locales = false
+
+    config.action_mailer.delivery_method = :postmark
+    config.action_mailer.postmark_settings = { :api_key => ENV['POSTMARK'] }
   end
 end
