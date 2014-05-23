@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/MomentumCMS/momentum_cms.git
-  revision: 9f6325dd42d7ddee72d33b487bd7ea7602fcc29b
+  revision: 85140b436e92560d5b3f6815a7e0d84ae2a99a3e
   branch: master
   specs:
     momentum_cms (0.0.1)
