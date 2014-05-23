@@ -21,8 +21,8 @@ GIT
 
 GIT
   remote: git://github.com/MomentumCMS/momentum_cms_user_management.git
-  revision: cd23d56791b660215965a9b292a6b8f5ae814611
-  branch: master
+  revision: 7a17d9f4bed60e7cf3d7e6e3a2ca2c5f812186c7
+  branch: develop
   specs:
     momentum_cms_user_management (0.0.1)
       haml-rails (~> 0.4)
