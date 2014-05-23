@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140515061328) do
+ActiveRecord::Schema.define(version: 20140523041020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "momentum_cms_block_templates", force: true do |t|
+    t.integer  "template_id"
+    t.string   "identifier"
+    t.string   "block_type"
+    t.string   "block_value_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "momentum_cms_block_templates", ["template_id"], name: "index_momentum_cms_block_templates_on_template_id", using: :btree
 
   create_table "momentum_cms_block_translations", force: true do |t|
     t.integer  "momentum_cms_block_id", null: false
@@ -28,39 +39,20 @@ ActiveRecord::Schema.define(version: 20140515061328) do
   add_index "momentum_cms_block_translations", ["momentum_cms_block_id"], name: "index_momentum_cms_block_translations_on_momentum_cms_block_id", using: :btree
 
   create_table "momentum_cms_blocks", force: true do |t|
-    t.integer  "content_id"
+    t.integer  "block_template_id"
+    t.integer  "page_id"
     t.string   "identifier"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "momentum_cms_blocks", ["content_id"], name: "index_momentum_cms_blocks_on_content_id", using: :btree
-
-  create_table "momentum_cms_content_translations", force: true do |t|
-    t.integer  "momentum_cms_content_id", null: false
-    t.string   "locale",                  null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "label"
-    t.text     "content"
-  end
-
-  add_index "momentum_cms_content_translations", ["locale"], name: "index_momentum_cms_content_translations_on_locale", using: :btree
-  add_index "momentum_cms_content_translations", ["momentum_cms_content_id"], name: "index_f568390e5943e526d13e1fe618dba0f7bd86e30f", using: :btree
-
-  create_table "momentum_cms_contents", force: true do |t|
-    t.boolean  "default"
-    t.integer  "page_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "momentum_cms_contents", ["page_id"], name: "index_momentum_cms_contents_on_page_id", using: :btree
+  add_index "momentum_cms_blocks", ["block_template_id"], name: "index_momentum_cms_blocks_on_block_template_id", using: :btree
+  add_index "momentum_cms_blocks", ["page_id"], name: "index_momentum_cms_blocks_on_page_id", using: :btree
 
   create_table "momentum_cms_files", force: true do |t|
     t.string   "label"
     t.string   "tag"
-    t.string   "slug"
+    t.string   "identifier"
     t.boolean  "multiple",          default: false
     t.integer  "site_id"
     t.integer  "attachable_id"
@@ -74,6 +66,29 @@ ActiveRecord::Schema.define(version: 20140515061328) do
   end
 
   add_index "momentum_cms_files", ["site_id"], name: "index_momentum_cms_files_on_site_id", using: :btree
+
+  create_table "momentum_cms_link_translations", force: true do |t|
+    t.integer  "momentum_cms_link_id", null: false
+    t.string   "locale",               null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "label"
+    t.text     "description"
+  end
+
+  add_index "momentum_cms_link_translations", ["locale"], name: "index_momentum_cms_link_translations_on_locale", using: :btree
+  add_index "momentum_cms_link_translations", ["momentum_cms_link_id"], name: "index_momentum_cms_link_translations_on_momentum_cms_link_id", using: :btree
+
+  create_table "momentum_cms_links", force: true do |t|
+    t.integer  "site_id"
+    t.string   "identifier"
+    t.string   "url"
+    t.string   "target"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "momentum_cms_links", ["site_id"], name: "index_momentum_cms_links_on_site_id", using: :btree
 
   create_table "momentum_cms_locales", force: true do |t|
     t.string "label"
@@ -95,7 +110,7 @@ ActiveRecord::Schema.define(version: 20140515061328) do
   create_table "momentum_cms_menus", force: true do |t|
     t.integer  "site_id"
     t.string   "label"
-    t.string   "slug"
+    t.string   "identifier"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -109,6 +124,7 @@ ActiveRecord::Schema.define(version: 20140515061328) do
     t.datetime "updated_at"
     t.string   "slug"
     t.string   "path"
+    t.string   "label"
   end
 
   add_index "momentum_cms_page_translations", ["locale"], name: "index_momentum_cms_page_translations_on_locale", using: :btree
@@ -117,8 +133,8 @@ ActiveRecord::Schema.define(version: 20140515061328) do
   create_table "momentum_cms_pages", force: true do |t|
     t.integer  "site_id"
     t.integer  "template_id"
-    t.string   "label"
-    t.integer  "published_content_id"
+    t.string   "identifier"
+    t.integer  "redirected_page_id"
     t.string   "ancestry"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -127,21 +143,13 @@ ActiveRecord::Schema.define(version: 20140515061328) do
   add_index "momentum_cms_pages", ["site_id"], name: "index_momentum_cms_pages_on_site_id", using: :btree
   add_index "momentum_cms_pages", ["template_id"], name: "index_momentum_cms_pages_on_template_id", using: :btree
 
-  create_table "momentum_cms_settings", force: true do |t|
-    t.string   "var",         null: false
-    t.text     "value"
-    t.integer  "target_id",   null: false
-    t.string   "target_type", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "momentum_cms_settings", ["target_type", "target_id", "var"], name: "momentum_cms_settings_uniq_ttype_tid_var", unique: true, using: :btree
-
   create_table "momentum_cms_sites", force: true do |t|
     t.string   "identifier"
     t.string   "label"
     t.string   "host"
+    t.string   "title"
+    t.text     "available_locales"
+    t.string   "default_locale"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -169,11 +177,14 @@ ActiveRecord::Schema.define(version: 20140515061328) do
 
   create_table "momentum_cms_templates", force: true do |t|
     t.string   "label"
+    t.string   "identifier"
     t.integer  "site_id"
-    t.text     "content"
+    t.text     "value"
+    t.text     "admin_value"
     t.text     "js"
     t.text     "css"
     t.string   "ancestry"
+    t.boolean  "has_yield",        default: false
     t.boolean  "permanent_record", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
